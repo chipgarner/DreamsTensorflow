@@ -2,7 +2,6 @@
 from __future__ import print_function
 import numpy as np
 import PIL.Image
-from IPython.display import clear_output, Image, display, HTML
 import cv2
 
 import tensorflow as tf
@@ -73,7 +72,7 @@ def show_graph(graph_def, max_const_size=32):
     iframe = """
         <iframe seamless style="width:800px;height:620px;border:0" srcdoc="{}"></iframe>
     """.format(code.replace('"', '&quot;'))
-    display(HTML(iframe))
+    # display(HTML(iframe))
 
 
 
@@ -170,11 +169,11 @@ def render_deepdream(t_obj, img0=img_noise,
             g = calc_grad_tiled(img, t_grad)
             img += g * (step / (np.abs(g).mean() + 1e-7))
             print('.', end=' ')
-            clear_output()
             showarray(img / 255.0)
 
 img0 = PIL.Image.open('ImagesIn/profile.jpg')
 img0 = np.float32(img0)
 showarray(img0/255.0)
 
+render_deepdream(T(layer)[:,:,:,139], img0)
 render_deepdream(tf.square(T('mixed4c')), img0)
