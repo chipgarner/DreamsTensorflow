@@ -1,5 +1,4 @@
 # boilerplate code
-from __future__ import print_function
 import numpy as np
 import PIL.Image
 import cv2
@@ -87,7 +86,7 @@ layer = 'mixed4d_3x3_bottleneck_pre_relu'
 channel = 139  # picking some feature channel to visualize
 
 # start with a gray image with a little noise
-img_noise = np.random.uniform(size=(224, 224, 3)) + 100.0
+img_noise = np.zeros(shape=(224, 224, 3)) + 100.0 #.random.uniform(size=(224, 224, 3)) + 100.0
 
 cv2.namedWindow("Show", cv2.WND_PROP_FULLSCREEN)
 cv2.setWindowProperty("Show", cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
@@ -97,11 +96,6 @@ def showarray(a, fmt='jpeg'):
     a = np.uint8(np.clip(a, 0, 1) * 255)
     cv2.imshow('Show', a)
     cv2.waitKey(1)
-
-
-def visstd(a, s=0.1):
-    '''Normalize the image range for visualization'''
-    return (a - a.mean()) / max(a.std(), 1e-4) * s + 0.5
 
 
 def T(layer):
@@ -128,7 +122,7 @@ def resize(img, size):
 resize = tffunc(np.float32, np.int32)(resize)
 
 
-def calc_grad_tiled(img, t_grad, tile_size=512):
+def calc_grad_tiled(img, t_grad, tile_size=200):
     '''Compute the value of tensor t_grad over the image in a tiled way.
     Random shifts are applied to the image to blur tile boundaries over
     multiple iterations.'''
@@ -171,9 +165,12 @@ def render_deepdream(t_obj, img0=img_noise,
             print('.', end=' ')
             showarray(img / 255.0)
 
-img0 = PIL.Image.open('ImagesIn/profile.jpg')
+img0 = cv2.imread('ImagesIn/profile800.jpg')
 img0 = np.float32(img0)
 showarray(img0/255.0)
 
 render_deepdream(T(layer)[:,:,:,139], img0)
+
+
 render_deepdream(tf.square(T('mixed4c')), img0)
+
