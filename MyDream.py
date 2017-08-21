@@ -1,9 +1,10 @@
 # boilerplate code
 import numpy as np
-import PIL.Image
+import random
 import cv2
-
 import tensorflow as tf
+
+
 model_fn = 'inception5h/tensorflow_inception_graph.pb'
 
 # creating TensorFlow session and loading the model
@@ -165,12 +166,37 @@ def render_deepdream(t_obj, img0=img_noise,
             print('.', end=' ')
             showarray(img / 255.0)
 
-img0 = cv2.imread('ImagesIn/profile800.jpg')
-img0 = np.float32(img0)
-showarray(img0/255.0)
+    return img
 
-render_deepdream(T(layer)[:,:,:,139], img0)
+def get_image(path):
+    img0 = cv2.imread(path)
+    img0 = np.float32(img0)
+    showarray(img0/255.0)
+    return img0
+
+# img0 = get_image('ImagesIn/profile800.jpg')
+# render_deepdream(T(layer)[:,:,:,139], img0)
+# render_deepdream(tf.square(T('mixed4c')), img0)
+
+img_profile = get_image('ImagesIn/profile740.jpg')
+img_parasol = get_image('ImagesIn/parasolSmall.jpg')
+img_eye = get_image('ImagesIn/eye740.jpg')
+
+channels = [1,16,18,7,24,4,11,19,23,111,30,36,31,42,41,44,1123,108,109,47,45,51,52,127,128,134,57,58,53,60,139,140,112,
+            61,75,101,100,98,90,136,114,122,115,82,70,138,97,116,117,87,141,86,83,143]
+for channel in channels:
+    which_image = random.randint(1, 3)
+
+    if which_image == 1:
+        render_deepdream(T(layer)[:,:,:,channel], img_eye)
+    elif which_image == 2:
+        render_deepdream(T(layer)[:, :, :, channel], img_parasol)
+    else:
+        render_deepdream(T(layer)[:, :, :, channel], img_profile)
 
 
-render_deepdream(tf.square(T('mixed4c')), img0)
+
+    # path = 'ImagesOut/mixed' + str(i) + '.jpg'
+    # print(path)
+    # cv2.imwrite(path, img)
 
