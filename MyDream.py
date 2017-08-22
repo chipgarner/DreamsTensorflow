@@ -3,6 +3,7 @@ import numpy as np
 import random
 import cv2
 import tensorflow as tf
+import DisplayImages
 
 model_fn = 'inception5h/tensorflow_inception_graph.pb'
 
@@ -32,14 +33,12 @@ channel = 139  # picking some feature channel to visualize
 # start with a gray image with a little noise
 img_noise = np.zeros(shape=(224, 224, 3)) + 100.0  # .random.uniform(size=(224, 224, 3)) + 100.0
 
-cv2.namedWindow("Show", cv2.WND_PROP_FULLSCREEN)
-cv2.setWindowProperty("Show", cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
-
+display = DisplayImages.DisplayImages(full_screen=True)
 
 def showarray(a):
     a = np.uint8(np.clip(a, 0, 1) * 255)
-    cv2.imshow('Show', a)
-    cv2.waitKey(1)
+    image = display.pad_image_to_screen_aspect(a)
+    display.show_image(image)
 
 
 def T(layer):
