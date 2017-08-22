@@ -24,61 +24,6 @@ print('Number of layers', len(layers))
 print('Total number of feature channels:', sum(feature_nums))
 
 
-# # Helper functions for TF Graph visualization
-#
-# def strip_consts(graph_def, max_const_size=32):
-#     """Strip large constant values from graph_def."""
-#     strip_def = tf.GraphDef()
-#     for n0 in graph_def.node:
-#         n = strip_def.node.add()
-#         n.MergeFrom(n0)
-#         if n.op == 'Const':
-#             tensor = n.attr['value'].tensor
-#             size = len(tensor.tensor_content)
-#             if size > max_const_size:
-#                 tensor.tensor_content = tf.compat.as_bytes("<stripped %d bytes>" % size)
-#     return strip_def
-#
-#
-# def rename_nodes(graph_def, rename_func):
-#     res_def = tf.GraphDef()
-#     for n0 in graph_def.node:
-#         n = res_def.node.add()
-#         n.MergeFrom(n0)
-#         n.name = rename_func(n.name)
-#         for i, s in enumerate(n.input):
-#             n.input[i] = rename_func(s) if s[0] != '^' else '^' + rename_func(s[1:])
-#     return res_def
-#
-#
-# def show_graph(graph_def, max_const_size=32):
-#     """Visualize TensorFlow graph."""
-#     if hasattr(graph_def, 'as_graph_def'):
-#         graph_def = graph_def.as_graph_def()
-#     strip_def = strip_consts(graph_def, max_const_size=max_const_size)
-#     code = """
-#         <script>
-#           function load() {{
-#             document.getElementById("{id}").pbtxt = {data};
-#           }}
-#         </script>
-#         <link rel="import" href="https://tensorboard.appspot.com/tf-graph-basic.build.html" onload=load()>
-#         <div style="height:600px">
-#           <tf-graph-basic id="{id}"></tf-graph-basic>
-#         </div>
-#     """.format(data=repr(str(strip_def)), id='graph' + str(np.random.rand()))
-#
-#     iframe = """
-#         <iframe seamless style="width:800px;height:620px;border:0" srcdoc="{}"></iframe>
-#     """.format(code.replace('"', '&quot;'))
-#     # display(HTML(iframe))
-#
-#
-# # Visualizing the network graph. Be sure expand the "mixed" nodes to see their
-# # internal structure. We are going to visualize "Conv2D" nodes.
-# tmp_def = rename_nodes(graph_def, lambda s: "/".join(s.split('_', 1)))
-# show_graph(tmp_def)
-
 # Picking some internal layer. Note that we use outputs before applying the ReLU nonlinearity
 # to have non-zero gradients for features with negative initial activations.
 layer = 'mixed4d_3x3_bottleneck_pre_relu'
@@ -193,22 +138,21 @@ img_roses = get_image('ImagesIn/roses.jpg')
 channels = [1, 16, 18, 7, 24, 4, 11, 19, 23, 111, 30, 36, 31, 42, 41, 44, 123, 108, 109, 47, 45, 51, 52, 127, 128, 134,
             57, 58, 53, 60, 139, 140, 112,
             61, 75, 101, 100, 98, 90, 136, 114, 122, 115, 82, 70, 138, 97, 116, 117, 87, 141, 86, 83, 143]
-for channel in channels:
-    which_image = random.randint(1, 5)
 
-    if which_image == 1:
-        render_deepdream(T(layer)[:, :, :, channel], img_eye)
-        print('eye')
-    elif which_image == 2:
-        render_deepdream(T(layer)[:, :, :, channel], img_parasol)
-        print('parasol')
-    elif which_image == 3:
-        render_deepdream(T(layer)[:, :, :, channel], img_leaves)
-    elif which_image == 4:
-        render_deepdream(T(layer)[:, :, :, channel], img_roses)
-    else:
-        render_deepdream(T(layer)[:, :, :, channel], img_profile)
-        print('profile')
+while True:
+    for channel in channels:
+        which_image = random.randint(1, 5)
+
+        if which_image == 1:
+            render_deepdream(T(layer)[:, :, :, channel], img_eye)
+        elif which_image == 2:
+            render_deepdream(T(layer)[:, :, :, channel], img_parasol)
+        elif which_image == 3:
+            render_deepdream(T(layer)[:, :, :, channel], img_leaves)
+        elif which_image == 4:
+            render_deepdream(T(layer)[:, :, :, channel], img_roses)
+        else:
+            render_deepdream(T(layer)[:, :, :, channel], img_profile)
 
         # path = 'ImagesOut/mixed' + str(i) + '.jpg'
         # print(path)
