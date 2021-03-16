@@ -3,8 +3,10 @@ __pycache__
 .cache
 *.pyc
 /inception5h
-/ImagesIn
 DeepDream.py
 /ImagesOut
-!/ImagesIn/Wet.JPG
+*.jpg
+*.JPG
+*.png
+!Wet.JPG
 

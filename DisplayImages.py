@@ -37,7 +37,7 @@ class DisplayImages:
         height, width = image.shape[:2]
         aspect_ratio = width / height
         if self.screen_aspect_ratio - aspect_ratio > 0.001: # Only for screen aspect wider than image
-            image_width = int(height * self.screen_aspect_ratio)
+            image_width = round(height * self.screen_aspect_ratio)
             edges = np.zeros((height, image_width, 3), np.uint8)
             offset = (image_width - width) // 2
             edges[0:height, offset:image_width - offset] = image
