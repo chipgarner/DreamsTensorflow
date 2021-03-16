@@ -6,4 +6,5 @@ __pycache__
 /ImagesIn
 DeepDream.py
 /ImagesOut
+!/ImagesIn/Wet.JPG
 
